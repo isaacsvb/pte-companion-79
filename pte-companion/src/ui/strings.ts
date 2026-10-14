@@ -60,6 +60,30 @@ export const UI = {
     noActivityYet: 'Ainda não há atividade registrada. Comece por qualquer pilar!',
   },
 
+  gamification: {
+    level: 'Nível',
+    xp: 'XP',
+    xpToNext: 'XP para o próximo nível',
+    streak: 'Ofensiva',
+    streakDays: 'dias consecutivos',
+    streakBest: 'Melhor ofensiva',
+    streakKeepGoing: 'Estude hoje para manter sua ofensiva!',
+    achievements: 'Conquistas',
+    achievementsUnlocked: 'desbloqueadas',
+    locked: 'Bloqueada',
+    unlocked: 'Desbloqueada',
+    newAchievement: 'Nova conquista desbloqueada!',
+    goalsTitle: 'Metas rumo ao 79+',
+    goalVocab: 'Módulos de vocabulário dominados',
+    goalChapters: 'Capítulos de estratégia lidos',
+    goalTasks: 'Tarefas praticadas',
+    goalPlans: 'Progresso médio dos planos',
+    cardsReviewedTotal: 'Cartões revisados (total)',
+    masteredCards: 'Cartões dominados',
+    goalHint:
+      'Avance de forma constante em todos os pilares: vocabulário, estratégia, treino e plano. Consistência diária é o caminho para o 79+.',
+  },
+
   srs: {
     again: 'De novo',
     hard: 'Difícil',

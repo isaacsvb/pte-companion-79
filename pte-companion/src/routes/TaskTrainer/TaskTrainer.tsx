@@ -84,16 +84,16 @@ export function TaskTrainer() {
 
   if (selected) {
     return (
-      <div>
-        <h2>{UI.nav.taskTrainer}</h2>
+      <div className="page">
+        <h2 className="page-title">{UI.nav.taskTrainer}</h2>
         <TaskRunner task={selected} onBack={() => setSelected(null)} />
       </div>
     );
   }
 
   return (
-    <div>
-      <h2>{UI.nav.taskTrainer}</h2>
+    <div className="page">
+      <h2 className="page-title">{UI.nav.taskTrainer}</h2>
       <p className="notice">{UI.trainer.noAutoScore}</p>
       {(['speaking', 'writing', 'reading', 'listening'] as const).map((part) => (
         <div key={part}>

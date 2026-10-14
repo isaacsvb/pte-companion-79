@@ -121,24 +121,24 @@ export function Vocabulary() {
         : VOCAB_MODULES.find((m) => m.id === session.moduleId)?.entries.map((e) => e.id) ?? [];
     if (queue.length === 0) {
       return (
-        <div>
-          <h2>{UI.nav.vocabulary}</h2>
+        <div className="page">
+          <h2 className="page-title">{UI.nav.vocabulary}</h2>
           <p className="notice">{UI.srs.noDueCards}</p>
           <button onClick={() => setSession(null)}>{UI.common.back}</button>
         </div>
       );
     }
     return (
-      <div>
-        <h2>{UI.nav.vocabulary}</h2>
+      <div className="page">
+        <h2 className="page-title">{UI.nav.vocabulary}</h2>
         <FlashcardSession queue={queue} onEnd={() => setSession(null)} />
       </div>
     );
   }
 
   return (
-    <div>
-      <h2>{UI.nav.vocabulary}</h2>
+    <div className="page">
+      <h2 className="page-title">{UI.nav.vocabulary}</h2>
       <div className="card">
         <div className="spread">
           <Counts />

@@ -1,9 +1,21 @@
 // Derivação do resumo do Dashboard a partir do ProgressState (lógica pura e testável).
 
 import type { ProgressState } from '../../storage/schema';
-import type { StudyPlan } from '../../content/types';
-import { isDue } from '../../domain/srs';
+import type { StudyPlan, VocabModule } from '../../content/types';
+import { isDue, type SrsCardState } from '../../domain/srs';
 import { progressPercent } from '../../domain/plans';
+import { levelFromXp, type LevelInfo } from '../../domain/gamification';
+
+export interface GamificationView {
+  xp: number;
+  level: LevelInfo;
+  currentStreak: number;
+  longestStreak: number;
+  cardsReviewedTotal: number;
+  masteredCards: number;
+  completedVocabModules: number;
+  unlockedAchievements: Record<string, string>;
+}
 
 export interface DashboardSummary {
   dueToday: number;
@@ -14,6 +26,7 @@ export interface DashboardSummary {
   chaptersRead: number;
   plans: { id: string; title: string; percent: number; started: boolean }[];
   hasAnyActivity: boolean;
+  gamification: GamificationView;
 }
 
 function sameDay(a: Date, b: Date): boolean {
@@ -24,11 +37,60 @@ function sameDay(a: Date, b: Date): boolean {
   );
 }
 
+/** Um cartão é "dominado" quando está em review com intervalo longo (>= 21 dias). */
+function isMastered(card: SrsCardState): boolean {
+  return card.state === 'review' && card.intervalDays >= 21;
+}
+
+/** Quantos cartões, no total, estão dominados. */
+export function countMasteredCards(srs: Record<string, SrsCardState>): number {
+  return Object.values(srs).filter(isMastered).length;
+}
+
+/**
+ * Quantos módulos de vocabulário estão "dominados" (todos os seus cartões
+ * foram iniciados e estão dominados). Pura: recebe os módulos como parâmetro.
+ */
+export function countCompletedVocabModules(
+  srs: Record<string, SrsCardState>,
+  modules: VocabModule[],
+): number {
+  let completed = 0;
+  for (const m of modules) {
+    if (m.entries.length === 0) continue;
+    const allMastered = m.entries.every((e) => {
+      const card = srs[e.id];
+      return card ? isMastered(card) : false;
+    });
+    if (allMastered) completed += 1;
+  }
+  return completed;
+}
+
+/** Deriva a visão de gamificação pronta para a UI. */
+export function buildGamificationView(
+  state: ProgressState,
+  modules: VocabModule[],
+): GamificationView {
+  const g = state.gamification;
+  return {
+    xp: g.xp,
+    level: levelFromXp(g.xp),
+    currentStreak: g.currentStreak,
+    longestStreak: g.longestStreak,
+    cardsReviewedTotal: g.cardsReviewedTotal,
+    masteredCards: countMasteredCards(state.srs),
+    completedVocabModules: countCompletedVocabModules(state.srs, modules),
+    unlockedAchievements: g.unlockedAchievements,
+  };
+}
+
 export function buildDashboardSummary(
   state: ProgressState,
   plans: StudyPlan[],
   moduleIdByEntryId: (entryId: string) => string | undefined,
   now: Date = new Date(),
+  vocabModules: VocabModule[] = [],
 ): DashboardSummary {
   const cards = Object.values(state.srs);
 
@@ -75,7 +137,8 @@ export function buildDashboardSummary(
     cards.length > 0 ||
     tasksPracticed > 0 ||
     chaptersRead > 0 ||
-    planSummaries.some((p) => p.started);
+    planSummaries.some((p) => p.started) ||
+    state.gamification.xp > 0;
 
   return {
     dueToday,
@@ -86,5 +149,6 @@ export function buildDashboardSummary(
     chaptersRead,
     plans: planSummaries,
     hasAnyActivity,
+    gamification: buildGamificationView(state, vocabModules),
   };
 }
