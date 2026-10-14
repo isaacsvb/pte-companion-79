@@ -45,20 +45,35 @@ describe('conteúdo — integridade dos dados', () => {
     expect(sst?.wordLimit).toEqual({ min: 50, max: 70 });
   });
 
-  it('possui 50 módulos de vocabulário bem formados', () => {
+  it('possui 50 módulos de vocabulário 100% completos e bem formados', () => {
     expect(VOCAB_MODULES).toHaveLength(50);
+
+    const ids = new Set<string>();
+    let totalEntries = 0;
+
     for (const m of VOCAB_MODULES) {
       expect(m.title).toBeTruthy();
-      if (m.pending) {
-        expect(m.entries).toHaveLength(0);
-      } else {
-        for (const e of m.entries) {
-          expect(e.english).toBeTruthy();
-          expect(e.practicalPronunciation).toBeTruthy();
-          expect(e.translationPtBr).toBeTruthy();
-        }
+      // Nenhum módulo pode permanecer pendente: o vocabulário está 100% completo.
+      expect(m.pending).toBeFalsy();
+      // Cada módulo tem ~10 entradas (mínimo 8).
+      expect(m.entries.length).toBeGreaterThanOrEqual(8);
+
+      for (const e of m.entries) {
+        expect(e.english).toBeTruthy();
+        expect(e.practicalPronunciation).toBeTruthy();
+        expect(e.translationPtBr).toBeTruthy();
+        // Nenhuma entrada pode estar marcada como pendente.
+        expect(e.pending).toBeFalsy();
+        // Ids globalmente únicos no padrão mNN-eKK.
+        expect(e.id).toMatch(/^m\d{2}-e\d{2}$/);
+        expect(ids.has(e.id)).toBe(false);
+        ids.add(e.id);
+        totalEntries += 1;
       }
     }
+
+    // 50 módulos × ~10 entradas ⇒ pelo menos 450 chunks transcritos.
+    expect(totalEntries).toBeGreaterThanOrEqual(450);
   });
 
   it('cobre os templates universais exigidos', () => {
