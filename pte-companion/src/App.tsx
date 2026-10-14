@@ -1,6 +1,7 @@
 import { HashRouter, NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { UI } from './ui/strings';
 import { useProgress } from './state/ProgressContext';
+import { levelFromXp } from './domain/gamification';
 import { Dashboard } from './routes/Dashboard/Dashboard';
 import { Strategy } from './routes/Strategy/Strategy';
 import { Vocabulary } from './routes/Vocabulary/Vocabulary';
@@ -18,12 +19,26 @@ const NAV = [
 ];
 
 function Shell() {
-  const { usingFallback } = useProgress();
+  const { usingFallback, state } = useProgress();
+  const level = levelFromXp(state.gamification.xp).level;
+  const streak = state.gamification.currentStreak;
   return (
     <div className="app-shell">
       <header className="app-header">
-        <h1>{UI.appName}</h1>
-        <p>{UI.appTagline}</p>
+        <div className="spread">
+          <div>
+            <h1>{UI.appName}</h1>
+            <p>{UI.appTagline}</p>
+          </div>
+          <div className="header-gamification" aria-label="progresso">
+            <span className="header-chip">
+              {UI.gamification.level} {level}
+            </span>
+            <span className="header-chip">
+              🔥 {streak}
+            </span>
+          </div>
+        </div>
       </header>
       <nav className="app-nav">
         {NAV.map((item) => (

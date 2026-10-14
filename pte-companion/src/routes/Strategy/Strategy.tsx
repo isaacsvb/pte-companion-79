@@ -45,8 +45,8 @@ export function Strategy() {
   const selected = chapters.find((c) => c.id === selectedId);
 
   return (
-    <div>
-      <h2>{UI.nav.strategy}</h2>
+    <div className="page">
+      <h2 className="page-title">{UI.nav.strategy}</h2>
       <div className="two-pane">
         <div>
           <ul className="plain">

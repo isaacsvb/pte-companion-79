@@ -16,8 +16,8 @@ export function BattlePlan() {
   const percent = progressPercent(plan, done);
 
   return (
-    <div>
-      <h2>{UI.nav.battlePlan}</h2>
+    <div className="page">
+      <h2 className="page-title">{UI.nav.battlePlan}</h2>
       <div className="row" style={{ marginBottom: '1rem' }}>
         {STUDY_PLANS.map((p) => (
           <button

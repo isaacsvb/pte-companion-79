@@ -45,8 +45,8 @@ export function Templates() {
   }
 
   return (
-    <div>
-      <h2>{UI.nav.templates}</h2>
+    <div className="page">
+      <h2 className="page-title">{UI.nav.templates}</h2>
       <div className="row" style={{ marginBottom: '1rem' }}>
         {TEMPLATES.map((t) => (
           <button
