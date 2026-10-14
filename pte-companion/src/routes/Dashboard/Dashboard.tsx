@@ -3,6 +3,7 @@ import { useProgress } from '../../state/ProgressContext';
 import { STUDY_PLANS } from '../../content/plans';
 import { getModuleOfEntry, VOCAB_MODULES } from '../../content/vocabulary';
 import { STRATEGY_CHAPTERS } from '../../content/strategy';
+import { TASKS } from '../../content/tasks';
 import { downloadProgress } from '../../storage/exportImport';
 import { buildDashboardSummary, type GamificationView } from './dashboardSummary';
 import { ACHIEVEMENTS } from '../../domain/gamification';
@@ -199,7 +200,11 @@ export function Dashboard() {
           value={summary.chaptersRead}
           total={STRATEGY_CHAPTERS.length}
         />
-        <GoalBar label={UI.gamification.goalTasks} value={summary.tasksPracticed} total={22} />
+        <GoalBar
+          label={UI.gamification.goalTasks}
+          value={summary.distinctTasksPracticed}
+          total={TASKS.length}
+        />
         <GoalBar label={UI.gamification.goalPlans} value={avgPlanPercent} total={100} />
         <p className="notice">{UI.gamification.goalHint}</p>
       </div>

@@ -76,9 +76,9 @@ export const UI = {
     goalsTitle: 'Metas rumo ao 79+',
     goalVocab: 'Módulos de vocabulário dominados',
     goalChapters: 'Capítulos de estratégia lidos',
-    goalTasks: 'Tarefas praticadas',
+    goalTasks: 'Tipos de tarefa praticados',
     goalPlans: 'Progresso médio dos planos',
-    cardsReviewedTotal: 'Cartões revisados (total)',
+    cardsReviewedTotal: 'Revisões de cartões (total)',
     masteredCards: 'Cartões dominados',
     goalHint:
       'Avance de forma constante em todos os pilares: vocabulário, estratégia, treino e plano. Consistência diária é o caminho para o 79+.',

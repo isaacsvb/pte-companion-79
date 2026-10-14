@@ -54,7 +54,37 @@ describe('dashboardSummary', () => {
     );
     const s = buildDashboardSummary(state, plans, () => undefined, NOW, vocabModules);
     expect(s.tasksPracticed).toBe(2);
+    expect(s.distinctTasksPracticed).toBe(2);
     expect(s.lastPractice).toBe('2024-01-09T10:00:00.000Z');
+  });
+
+  it('tasksPracticed é cumulativo mas distinctTasksPracticed conta cobertura (repetições contam 1)', () => {
+    const state = defaultState();
+    // Mesma tarefa praticada 3 vezes + uma segunda tarefa 1 vez.
+    state.taskSessions.push(
+      { taskId: 'read-aloud', completedAt: '2024-01-05T10:00:00.000Z' },
+      { taskId: 'read-aloud', completedAt: '2024-01-06T10:00:00.000Z' },
+      { taskId: 'read-aloud', completedAt: '2024-01-07T10:00:00.000Z' },
+      { taskId: 'write-essay', completedAt: '2024-01-08T10:00:00.000Z' },
+    );
+    const s = buildDashboardSummary(state, plans, () => undefined, NOW, vocabModules);
+    // Contador de volume continua somando todas as sessões.
+    expect(s.tasksPracticed).toBe(4);
+    // Cobertura: apenas 2 tipos de tarefa distintos foram tocados.
+    expect(s.distinctTasksPracticed).toBe(2);
+  });
+
+  it('distinctTasksPracticed é 0 sem sessões e nunca passa dos tipos distintos', () => {
+    const state = defaultState();
+    expect(buildDashboardSummary(state, plans, () => undefined, NOW, vocabModules).distinctTasksPracticed).toBe(0);
+
+    // Repetir exaustivamente uma única tarefa mantém a cobertura em 1.
+    for (let i = 0; i < 25; i += 1) {
+      state.taskSessions.push({ taskId: 'read-aloud', completedAt: `2024-01-0${(i % 9) + 1}T10:00:00.000Z` });
+    }
+    const s = buildDashboardSummary(state, plans, () => undefined, NOW, vocabModules);
+    expect(s.tasksPracticed).toBe(25);
+    expect(s.distinctTasksPracticed).toBe(1);
   });
 
   it('reflete progresso dos planos', () => {

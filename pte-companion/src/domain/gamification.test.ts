@@ -133,12 +133,12 @@ describe('gamification — conquistas', () => {
     expect(find('first-chapter').predicate({ ...baseCtx, chaptersRead: 1 })).toBe(true);
   });
 
-  it('100 cartões revisados', () => {
+  it('100 revisões de cartões (eventos, não cartões distintos)', () => {
     expect(find('cards-100').predicate({ ...baseCtx, cardsReviewedTotal: 99 })).toBe(false);
     expect(find('cards-100').predicate({ ...baseCtx, cardsReviewedTotal: 100 })).toBe(true);
   });
 
-  it('500 cartões revisados', () => {
+  it('500 revisões de cartões', () => {
     expect(find('cards-500').predicate({ ...baseCtx, cardsReviewedTotal: 499 })).toBe(false);
     expect(find('cards-500').predicate({ ...baseCtx, cardsReviewedTotal: 500 })).toBe(true);
   });
@@ -161,6 +161,11 @@ describe('gamification — conquistas', () => {
   it('nível 5', () => {
     expect(find('level-5').predicate({ ...baseCtx, level: 4 })).toBe(false);
     expect(find('level-5').predicate({ ...baseCtx, level: 5 })).toBe(true);
+  });
+
+  it('10 cartões dominados (usa masteredCards, cartões distintos)', () => {
+    expect(find('mastered-10').predicate({ ...baseCtx, masteredCards: 9 })).toBe(false);
+    expect(find('mastered-10').predicate({ ...baseCtx, masteredCards: 10 })).toBe(true);
   });
 
   it('evaluateAchievements retorna novas conquistas e exclui as já desbloqueadas', () => {

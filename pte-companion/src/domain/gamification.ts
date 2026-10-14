@@ -166,16 +166,19 @@ export const ACHIEVEMENTS: Achievement[] = [
     predicate: (ctx) => ctx.chaptersRead >= 1,
   },
   {
+    // cardsReviewedTotal conta EVENTOS de revisão (cada avaliação de cartão soma 1),
+    // incluindo repetições do mesmo cartão. A cópia fala em "revisões", não em
+    // cartões distintos, para não exagerar o que a métrica realmente mede.
     id: 'cards-100',
-    title: '100 cartões revisados',
-    description: 'Revise 100 cartões de vocabulário no total.',
+    title: '100 revisões de cartões',
+    description: 'Faça 100 revisões de cartões de vocabulário no total.',
     icon: '🃏',
     predicate: (ctx) => ctx.cardsReviewedTotal >= 100,
   },
   {
     id: 'cards-500',
-    title: '500 cartões revisados',
-    description: 'Revise 500 cartões de vocabulário no total.',
+    title: '500 revisões de cartões',
+    description: 'Faça 500 revisões de cartões de vocabulário no total.',
     icon: '🏅',
     predicate: (ctx) => ctx.cardsReviewedTotal >= 500,
   },
@@ -206,6 +209,15 @@ export const ACHIEVEMENTS: Achievement[] = [
     description: 'Chegue ao nível 5 acumulando XP.',
     icon: '⭐',
     predicate: (ctx) => ctx.level >= 5,
+  },
+  {
+    // Consome masteredCards (cartões em review com intervalo >= 21 dias): cartões
+    // DISTINTOS realmente dominados, diferente do contador de revisões (eventos).
+    id: 'mastered-10',
+    title: '10 cartões dominados',
+    description: 'Domine 10 cartões de vocabulário (retenção de longo prazo).',
+    icon: '🧠',
+    predicate: (ctx) => ctx.masteredCards >= 10,
   },
 ];
 

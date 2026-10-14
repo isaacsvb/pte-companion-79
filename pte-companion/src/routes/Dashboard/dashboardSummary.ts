@@ -21,7 +21,10 @@ export interface DashboardSummary {
   dueToday: number;
   reviewedToday: number;
   modulesInProgress: number;
+  /** Total de sessões de treino registradas (contador cumulativo, cresce a cada sessão). */
   tasksPracticed: number;
+  /** Quantidade de tipos de tarefa DISTINTOS já praticados (cobertura, não volume). */
+  distinctTasksPracticed: number;
   lastPractice: string | null; // ISO
   chaptersRead: number;
   plans: { id: string; title: string; percent: number; started: boolean }[];
@@ -113,6 +116,7 @@ export function buildDashboardSummary(
   }
 
   const tasksPracticed = state.taskSessions.length;
+  const distinctTasksPracticed = new Set(state.taskSessions.map((s) => s.taskId)).size;
   const lastPractice =
     state.taskSessions.length > 0
       ? state.taskSessions.reduce(
@@ -145,6 +149,7 @@ export function buildDashboardSummary(
     reviewedToday,
     modulesInProgress: moduleSet.size,
     tasksPracticed,
+    distinctTasksPracticed,
     lastPractice,
     chaptersRead,
     plans: planSummaries,

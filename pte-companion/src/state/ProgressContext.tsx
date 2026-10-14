@@ -26,7 +26,7 @@ import {
 import { VOCAB_MODULES } from '../content/vocabulary';
 import { countCompletedVocabModules, countMasteredCards } from '../routes/Dashboard/dashboardSummary';
 
-interface ProgressContextValue {
+export interface ProgressContextValue {
   state: ProgressState;
   usingFallback: boolean;
   recovered: boolean;
